@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "cleanup": "rm -rf output.log",
-    "remove-images": "npm run cleanup && node remove-numbered-images.js",
-    "remove-images:dry": "npm run cleanup && node remove-numbered-images.js --dryRun"
+    "remove-images": "npm run cleanup && node remove-images.js",
+    "remove-images:dry": "npm run cleanup && node remove-images.js --dryRun"
   },
   "author": "Nikita Merezhko <nikita.merezhko",
   "license": "ISC",
@@ -16,6 +16,7 @@
     "@commercetools/sdk-client-v2": "^3.0.0",
     "@commercetools/sdk-middleware-auth": "^8.0.1",
     "@commercetools/sdk-middleware-http": "^8.0.1",
+    "csv-parser": "^3.2.0",
     "dotenv": "^16.5.0",
     "node-fetch": "^2.7.0"
   },
