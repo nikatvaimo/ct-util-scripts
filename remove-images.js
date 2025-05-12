@@ -69,7 +69,7 @@ async function processImages() {
         const header = `\n${dryRun ? '[DRY RUN]' : '[LIVE]'} Product ${productKey}, Batch ${index + 1}:`;
         logToFile(header);
         actionChunk.forEach((a, i) => {
-          const actionMessage = `  ${i + 1}. Remove image from variant ${a.sku}: ${a.imageUrl}`;
+          const actionMessage = `  ${i + 1}. ${a.action} ${a.sku ? `from variant ${a.sku}` : ''}: ${a.imageUrl || ''}`;
           logToFile(actionMessage);
         });
 
