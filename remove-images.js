@@ -37,6 +37,14 @@ function logToFile(message) {
   fs.appendFileSync(outputLogFilePath, message + '\n', 'utf8');
 }
 
+function pushActions(actions, variant, imageUrl) {
+  actions.push({
+    action: 'removeImage',
+    sku: variant.sku,
+    imageUrl,
+  });
+}
+
 async function processImages() {
   const apiClient = buildApiClient();
 
@@ -46,17 +54,24 @@ async function processImages() {
 
     for (const product of products) {
       // Assuming the CSV has headers: productKey, variantKey, imageUrl
-      const { productKey, variantKey, imageUrl } = product;
+      const { productKey, imageUrl } = product;
+      const { body: productData } = await apiClient.products().withKey({ key: productKey }).get().execute();
 
       if (!actionsMap.has(productKey)) {
         actionsMap.set(productKey, []);
       }
 
-      actionsMap.get(productKey).push({
-        action: 'removeImage',
-        sku: variantKey,
-        imageUrl,
+      pushActions(actionsMap.get(productKey), productData.masterData.current.masterVariant, imageUrl);
+
+      productData.masterData.current.variants.forEach((variant) => {
+        const existingActions = actionsMap.get(productKey);
+        const actionExists = existingActions.some(action => action.sku === variant.sku && action.imageUrl === imageUrl);
+
+        if (!actionExists) {
+          pushActions(existingActions, variant, imageUrl);
+        }
       });
+
     }
 
     for (const [productKey, actions] of actionsMap.entries()) { //actionsMap.entries()
