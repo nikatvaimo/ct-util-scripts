@@ -72,12 +72,14 @@ async function processImages() {
         }
       });
 
+      // Only add a publish action if the product is already published
+      if (productData.masterData.published) {
+        actionsMap.get(productKey).push({ action: 'publish' });
+      }
+
     }
 
     for (const [productKey, actions] of actionsMap.entries()) { //actionsMap.entries()
-      // Add a publish action to the end of each set of actions
-      actions.push({ action: 'publish' });
-
       const actionChunks = chunkArray(actions, ACTIONS_LIMIT);
 
       for (const [index, actionChunk] of actionChunks.entries()) { //
